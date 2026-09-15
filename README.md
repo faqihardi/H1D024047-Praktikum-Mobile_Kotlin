@@ -7,11 +7,11 @@
 - Shift Baru : F
 
 ## Screenshot
-| Halaman     | Screenshot                                     |
-|-------------|------------------------------------------------|
-| Pertemuan 1 | ![Image 1](screenshots/pertemuan_1.jpeg)       |
-| Pertemuan 2 | ![Pertemuan 2](screenshots/pertemuan_2_1.jpeg) |
-|             | ![Pertemuan 2](screenshots/pertemuan_2_2.jpeg) |    
+| Halaman     | Screenshot                                            |
+|-------------|-------------------------------------------------------|
+| Pertemuan 1 | <img src="screenshots/pertemuan_1.jpeg" width="300">  |
+| Pertemuan 2 | <img src="screenshots/pertemuan_2_1.png" width="300"> |
+|             | <img src="screenshots/pertemuan_2_1.png" width="300"> |
 
-![Gambar](screenshots/pertemuan_1.jpeg)
+
 
