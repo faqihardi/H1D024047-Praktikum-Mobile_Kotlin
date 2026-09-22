@@ -29,6 +29,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -98,7 +99,7 @@ fun DaftarProdukScreen() {
                 .padding(paddingValues)
         ) {
             Text(
-                text = "kategori Produk",
+                text = "Kategori Produk",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(16.dp)
             )
@@ -153,6 +154,37 @@ fun PreviewTopBar() {
 fun PreviewTopBarDark() {
     JualanTheme(darkTheme = true) {
         DaftarProdukScreen()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(name = "PreviewTopBar", showBackground = true)
+@Composable
+fun PreviewTopAppBar() {
+    JualanTheme {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            text = "Daftar Produk UMKM"
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    ),
+                    actions = {
+                        Icon(
+                            imageVector = Icons.Outlined.ShoppingCart,
+                            contentDescription = "Pesan",
+                            modifier = Modifier.padding(end = 16.dp),
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                )
+            }
+        ) { }
     }
 }
 
