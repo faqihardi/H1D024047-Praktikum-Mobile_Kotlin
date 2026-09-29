@@ -30,5 +30,5 @@
 |-------------------------|------------------------------------------------------------------|
 | Katalog Hasil Pencarian | <img src="screenshots/Pertemuan4.jpeg" width="300">              |
 | Detail Produk           | <img src="screenshots/Pertemuan4_DetailProduk.jpeg" width="300"> |
-| Hubungi Kami            | <img src="screenshots/pertemuan4_HubungiKami.jpeg" width="300">  |
+| Hubungi Kami            | <img src="screenshots/Pertemuan4_HubungiKami.jpeg" width="300">  |
 
