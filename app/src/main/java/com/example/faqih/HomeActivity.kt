@@ -11,7 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.faqih.ui.screen.DaftarProdukScreen
+import com.example.faqih.ui.screen.DetailProductScreen
+import com.example.faqih.ui.screen.HubungiKamiScreen
 import com.example.faqih.ui.theme.JualanTheme
 
 class HomeActivity : ComponentActivity() {
@@ -20,7 +27,29 @@ class HomeActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             JualanTheme {
-                DaftarProdukScreen()
+//                DaftarProdukScreen()
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = "daftar_produk") {
+                    composable("daftar_produk") {
+                        DaftarProdukScreen(navCotroller = navController)
+                    }
+                    composable(
+                        route = "detail/{productId}",
+                        arguments = listOf(navArgument("productId") {
+                            type = NavType.IntType
+                        })
+                    ) {
+                        backStackEntry ->
+                        val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+                        DetailProductScreen(
+                            productId = productId,
+                            navController = navController
+                        )
+                    }
+                    composable("hubungi_kami") {
+                        HubungiKamiScreen(navController = navController)
+                    }
+                }
             }
         }
     }
