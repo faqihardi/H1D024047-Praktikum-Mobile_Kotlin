@@ -2,16 +2,19 @@ package com.example.faqih.ui.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -26,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -35,45 +39,73 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.faqih.R
-import com.example.faqih.data.dummy.DummyData
+//import com.example.faqih.data.dummy.DummyData
 import com.example.faqih.data.model.Product
 import com.example.faqih.ui.theme.JualanTheme
+import com.example.faqih.util.JualanConstants
+import com.example.faqih.viewmodel.ProductUiState
+import com.example.faqih.viewmodel.ProductViewModel
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailProductScreen(productId: Int, navController: NavController?) {
+fun DetailProductScreen(productId: Int, navController: NavController?, viewModel: ProductViewModel) {
     val context = LocalContext.current
-    var isLoading by remember { mutableStateOf((true)) }
-    var product by remember { mutableStateOf<Product?>(null) }
+//    var isLoading by remember { mutableStateOf((true)) }
+//    var product by remember { mutableStateOf<Product?>(null) }
     var quantity by rememberSaveable { mutableStateOf(1) }
 
-    LaunchedEffect(productId) {
-        isLoading = true
-        delay(1000)
-        product = DummyData.products.find { it.id == productId}
-        isLoading = false
-    }
+    val uiState by viewModel.uiState.collectAsState()
 
-    StatelessDetailProduct(
-        product = product,
-        isLoading = isLoading,
-        quantity = quantity,
-        onQuantityChange = { quantity = it},
-        onBackClick = { navController?.popBackStack() },
-        onAddToCartClick = { Toast.makeText(context, "Dimasukkan: $quantity", Toast.LENGTH_SHORT).show()}
-    )
+
+    when (val state = uiState) {
+        is ProductUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+        is ProductUiState.Error -> {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Error: ${state.message}", color = MaterialTheme.colorScheme.error)
+            }
+        }
+        is ProductUiState.Success -> {
+            val product = state.products.find { it.id == productId }
+
+            if (product == null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("Produk tidak ditemukan.")
+                }
+            } else {
+                StatelessDetailProduct(
+                    product = product,
+                    quantity = quantity,
+                    onQuantityChange = { newQuantity ->
+                        quantity = newQuantity
+                    },
+                    onBackClick = { navController?.popBackStack() },
+                    onAddToCartClick = {
+                        Toast.makeText(context, "Membeli sebanyak $quantity", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatelessDetailProduct(
-    product: Product?, isLoading: Boolean, quantity: Int,
+    product: Product?, quantity: Int,
     onQuantityChange: (Int) -> Unit, onBackClick: () -> Unit, onAddToCartClick: () -> Unit
 ) {
     Scaffold(
@@ -89,16 +121,31 @@ fun StatelessDetailProduct(
         }
     ) {
         paddingValues ->
-        if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-        } else if (product != null) {
+        if (product != null) {
             Column(modifier = Modifier.fillMaxSize().padding(paddingValues).verticalScroll(
                 rememberScrollState()
             )) {
-                val imageRes = if (product.img == "dummy_product") R.drawable.mieayam else R.drawable.mieayam
-                Image(painterResource(id = imageRes), contentDescription = null, modifier = Modifier.fillMaxWidth().height(280.dp))
+//                val imageRes = if (product.img == "dummy_product") R.drawable.mieayam else R.drawable.mieayam
+//                Image(painterResource(id = imageRes), contentDescription = null, modifier = Modifier.fillMaxWidth().height(280.dp))
+                val imageModel: Any = if (product.img == "dummy_product") {
+                    R.drawable.mieayam
+                } else {
+                    "${JualanConstants.BASE_URL}/img/${product.img}"
+                }
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    AsyncImage(
+                        model = imageModel,
+                        contentDescription = product.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White),
+                        contentScale = ContentScale.Fit
+                    )
+                }
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(product.name, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
                     Text("Rp ${product.price}", style = MaterialTheme.typography.titleLarge)
@@ -143,10 +190,10 @@ fun StatelessDetailProduct(
     }
 }
 
-@Preview(name = "PreviewDetailProduct", showBackground = true)
-@Composable
-fun PreviewDetailProduct() {
-    JualanTheme {
-        DetailProductScreen(1, null)
-    }
-}
+//@Preview(name = "PreviewDetailProduct", showBackground = true)
+//@Composable
+//fun PreviewDetailProduct() {
+//    JualanTheme {
+//        DetailProductScreen(1, null)
+//    }
+//}

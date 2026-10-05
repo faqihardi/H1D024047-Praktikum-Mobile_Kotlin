@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +21,7 @@ import com.example.faqih.ui.screen.DaftarProdukScreen
 import com.example.faqih.ui.screen.DetailProductScreen
 import com.example.faqih.ui.screen.HubungiKamiScreen
 import com.example.faqih.ui.theme.JualanTheme
+import com.example.faqih.viewmodel.ProductViewModel
 
 class HomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,9 +31,10 @@ class HomeActivity : ComponentActivity() {
             JualanTheme {
 //                DaftarProdukScreen()
                 val navController = rememberNavController()
+                val productViewModel: ProductViewModel = viewModel()
                 NavHost(navController = navController, startDestination = "daftar_produk") {
                     composable("daftar_produk") {
-                        DaftarProdukScreen(navCotroller = navController)
+                        DaftarProdukScreen(navCotroller = navController, viewModel = productViewModel)
                     }
                     composable(
                         route = "detail/{productId}",
@@ -43,7 +46,8 @@ class HomeActivity : ComponentActivity() {
                         val productId = backStackEntry.arguments?.getInt("productId") ?: 0
                         DetailProductScreen(
                             productId = productId,
-                            navController = navController
+                            navController = navController,
+                            viewModel = productViewModel
                         )
                     }
                     composable("hubungi_kami") {
