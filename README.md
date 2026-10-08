@@ -35,6 +35,6 @@
 ### Pertemuan 5
 | Halaman       | Screenshot                                                 |
 |---------------|------------------------------------------------------------|
-| Katalog Home  | <img src="screenshots/Pertemuan5_home.jpeg" width="300">   |
-| Detail Produk | <img src="screenshots/Pertemuan5_detail.jpeg" width="300"> |
+| Katalog Home  | <img src="screenshots/pertemuan5_home.jpeg" width="300">   |
+| Detail Produk | <img src="screenshots/pertemuan5_detail.jpeg" width="300"> |
 
