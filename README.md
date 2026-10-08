@@ -32,3 +32,9 @@
 | Detail Produk           | <img src="screenshots/Pertemuan4_DetailProduk.jpeg" width="300"> |
 | Hubungi Kami            | <img src="screenshots/Pertemuan4_HubungiKami.jpeg" width="300">  |
 
+### Pertemuan 5
+| Halaman       | Screenshot                                                 |
+|---------------|------------------------------------------------------------|
+| Katalog Home  | <img src="screenshots/Pertemuan5_home.jpeg" width="300">   |
+| Detail Produk | <img src="screenshots/Pertemuan5_detail.jpeg" width="300"> |
+
